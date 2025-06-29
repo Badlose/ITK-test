@@ -10,4 +10,5 @@ public class InsufficientFundsException extends ApiParentException {
     public InsufficientFundsException(String message) {
         super(ErrorType.INSUFFICIENT_FUNDS, "There are not enough funds in this wallet: [%s]".formatted(message));
     }
+
 }

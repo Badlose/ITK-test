@@ -12,4 +12,5 @@ public class ApiParentException extends RuntimeException {
         super(message);
         this.errorType = errorType;
     }
+
 }

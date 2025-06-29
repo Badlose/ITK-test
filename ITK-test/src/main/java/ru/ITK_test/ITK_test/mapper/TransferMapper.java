@@ -5,15 +5,13 @@ import ru.ITK_test.ITK_test.dto.outgo.TransferStatusDto;
 import ru.ITK_test.ITK_test.entity.Transfer;
 import ru.ITK_test.ITK_test.entity.TransferStatus;
 
-import java.math.BigDecimal;
-
 public interface TransferMapper {
 
     static Transfer.TransferBuilder createTransferBuilder(TransferDto dto) {
         return Transfer.builder()
                 .walletId(dto.getWalletId())
                 .operationType(dto.getOperationType())
-                .amount(BigDecimal.valueOf(dto.getAmount()));
+                .amount(dto.getAmount());
     }
 
     static Transfer toEntity(TransferDto dto, TransferStatus status) {
@@ -27,4 +25,5 @@ public interface TransferMapper {
                 .status(transfer.getStatus())
                 .build();
     }
+
 }

@@ -10,4 +10,5 @@ public class WalletNotFoundException extends ApiParentException {
     public WalletNotFoundException(String message) {
         super(ErrorType.WALLET_NOT_FOUND_BY_WALLET_UUID, "Wallet not found by wallet UUID: [%s]".formatted(message));
     }
+
 }

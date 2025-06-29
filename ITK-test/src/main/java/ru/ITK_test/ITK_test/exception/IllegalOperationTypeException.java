@@ -10,4 +10,5 @@ public class IllegalOperationTypeException extends ApiParentException {
     public IllegalOperationTypeException(String message) {
         super(ErrorType.ILLEGAL_OPERATION_TYPE, "Incorrect operation type for transfer id: [%s]".formatted(message));
     }
+
 }

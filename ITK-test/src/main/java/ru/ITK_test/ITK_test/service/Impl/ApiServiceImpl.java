@@ -1,6 +1,6 @@
 package ru.ITK_test.ITK_test.service.Impl;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ITK_test.ITK_test.dto.income.TransferDto;
@@ -24,19 +24,20 @@ import java.math.RoundingMode;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
 public class ApiServiceImpl implements ApiService {
 
+    @Autowired
     private WalletRepository walletRepository;
+    @Autowired
     private TransferRepository transferRepository;
 
     @Override
     @Transactional
-    public TransferStatusDto transfer(TransferDto dto) {
+    public TransferStatusDto createTransfer(TransferDto dto) {
 
         Transfer transfer = TransferMapper.toEntity(dto, TransferStatus.PENDING);
         Wallet wallet = findWalletById(dto.getWalletId());
-        BigDecimal amount = BigDecimal.valueOf(dto.getAmount());
+        BigDecimal amount = dto.getAmount();
         BigDecimal walletBalance = wallet.getBalance();
         OperationType operationType = dto.getOperationType();
 

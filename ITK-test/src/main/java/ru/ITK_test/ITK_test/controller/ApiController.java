@@ -37,8 +37,8 @@ public class ApiController {
                     @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = ""))
             }
     )
-    private TransferStatusDto transfer(@Valid @RequestBody TransferDto dto) {
-        return apiService.transfer(dto);
+    private TransferStatusDto createTransfer(@Valid @RequestBody TransferDto dto) {
+        return apiService.createTransfer(dto);
     }
 
     @GetMapping("/wallets/{walletUuid}")
@@ -54,4 +54,5 @@ public class ApiController {
                                         @PathVariable UUID walletUuid) {
         return apiService.getBalance(walletUuid);
     }
+
 }
