@@ -1,6 +1,6 @@
 package ru.ITK_test.ITK_test.service.Impl;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ITK_test.ITK_test.dto.income.TransferDto;
@@ -24,7 +24,7 @@ import java.math.RoundingMode;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ApiServiceImpl implements ApiService {
 
     private WalletRepository walletRepository;
@@ -35,7 +35,6 @@ public class ApiServiceImpl implements ApiService {
     public TransferStatusDto transfer(TransferDto dto) {
 
         Transfer transfer = TransferMapper.toEntity(dto, TransferStatus.PENDING);
-        transferRepository.save(transfer);
         Wallet wallet = findWalletById(dto.getWalletId());
         BigDecimal amount = BigDecimal.valueOf(dto.getAmount());
         BigDecimal walletBalance = wallet.getBalance();
@@ -47,11 +46,11 @@ public class ApiServiceImpl implements ApiService {
                 case WITHDRAW -> {
                     BigDecimal newBalance = wallet.getBalance().subtract(amount);
                     if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
-                        throw new InsufficientFundsException(transfer.getStatus().toString());
+                        throw new InsufficientFundsException(wallet.getId().toString());
                     }
                     wallet.setBalance(newBalance);
                 }
-                default -> throw new IllegalOperationTypeException(operationType.toString());
+                default -> throw new IllegalOperationTypeException(transfer.getId().toString());
             }
             roundBalance(wallet);
             walletRepository.save(wallet);
@@ -66,18 +65,19 @@ public class ApiServiceImpl implements ApiService {
     }
 
     @Override
+    @Transactional
     public BalanceDto getBalance(UUID walletUuid) {
         Wallet wallet = findWalletById(walletUuid);
         return BalanceMapper.toBalanceDto(wallet.getBalance());
     }
 
-    private void roundBalance(Wallet wallet) {
-        wallet.setBalance(wallet.getBalance().setScale(2, RoundingMode.HALF_UP));
+    private Wallet findWalletById(UUID uuid) {
+        return walletRepository.findByWalletForUpdate(uuid).orElseThrow(
+                () -> new WalletNotFoundException(uuid.toString()));
     }
 
-    private Wallet findWalletById(UUID uuid) {
-        return walletRepository.findByUuid(uuid).orElseThrow(
-                () -> new WalletNotFoundException(uuid.toString()));
+    private void roundBalance(Wallet wallet) {
+        wallet.setBalance(wallet.getBalance().setScale(2, RoundingMode.HALF_UP));
     }
 
 }

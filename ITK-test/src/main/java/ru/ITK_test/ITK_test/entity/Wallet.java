@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "wallets")
+@Table(name = "wallet")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -21,7 +21,7 @@ public class Wallet {
     private Long id;
 
     @NotNull
-    @Column(name = "wallet_uuid", nullable = false)
+    @Column(name = "wallet_uuid", nullable = false, unique = true)
     private UUID walletUuid;
 
     @NotNull

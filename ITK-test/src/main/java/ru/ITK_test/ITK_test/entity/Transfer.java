@@ -7,11 +7,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "transfers")
+@Table(name = "transfer")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +21,7 @@ public class Transfer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "transfer_id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @NotNull
@@ -30,13 +31,17 @@ public class Transfer {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "operation_type")
-    private OperationType type;
+    private OperationType operationType;
+
+    @NotNull
+    @Column(name = "amount", nullable = false)
+    private BigDecimal amount;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private TransferStatus status;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist

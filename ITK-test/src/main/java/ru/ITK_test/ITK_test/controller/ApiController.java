@@ -1,10 +1,12 @@
 package ru.ITK_test.ITK_test.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.ITK_test.ITK_test.dto.income.TransferDto;
@@ -16,7 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(name = "api/v1")
+@RequestMapping("/api/v1")
 @Tag(name = "Api", description = "API для управления переводами")
 public class ApiController {
 
@@ -28,29 +30,28 @@ public class ApiController {
             operationId = "transfer",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = TransferStatusDto.class))
+                            schema = @Schema(implementation = TransferDto.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "")),
+                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = ""))
             }
     )
-    private TransferStatusDto transfer(@RequestBody TransferDto dto) {
+    private TransferStatusDto transfer(@Valid @RequestBody TransferDto dto) {
         return apiService.transfer(dto);
     }
 
     @GetMapping("/wallets/{walletUuid}")
-    @Operation(summary = "Узнать баланс",
+    @Operation(summary = "Узнать баланс кошелька",
             tags = {"Api"},
             operationId = "getWalletBalance",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = BalanceDto.class))
-            ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "")),
+                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = ""))
             }
     )
-    private BalanceDto getWalletBalance(@RequestBody UUID walletUuid) {
+    private BalanceDto getWalletBalance(@Parameter(example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+                                        @PathVariable UUID walletUuid) {
         return apiService.getBalance(walletUuid);
     }
 }
