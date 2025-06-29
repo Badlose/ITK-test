@@ -1,0 +1,27 @@
+volumes:
+  db_data:
+
+services:
+  db_itk:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ITK-test
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db_itk
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db_itk:5432/ITK-test
+      SPRING_LIQUIBASE_CHANGE_LOG: classpath:liquibase/changelog-master.yml
+
